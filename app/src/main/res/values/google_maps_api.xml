@@ -1,0 +1,24 @@
+<resources>
+    <!--
+    TODO: Before you run your application, you need a Google Maps API key.
+
+    To get one, follow this link, follow the directions and press "Create" at the end:
+
+    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=13:74:A3:88:1B:28:A5:B1:04:F7:0D:39:91:A3:83:27:7D:B5:E1:20%3Bcom.colin.go4lunch.controllers.activities
+
+    You can also add your credentials to an existing key, using these values:
+
+    Package name:
+    com.colin.go4lunch.controllers.activities
+
+    SHA-1 certificate fingerprint:
+    13:74:A3:88:1B:28:A5:B1:04:F7:0D:39:91:A3:83:27:7D:B5:E1:20
+
+    Alternatively, follow the directions here:
+    https://developers.google.com/maps/documentation/android/start#get-key
+
+    Once you have your key (it starts with "AIza"), replace the "google_maps_key"
+    string in this file.
+    -->
+    <!--string name="google_maps_api" templateMergeStrategy="preserve" translatable="false">AIzaSyANfhMNNCPsMwPWfrO-rWE1BySPSO8y4ME</string-->
+</resources>
