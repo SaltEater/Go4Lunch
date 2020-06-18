@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="navigation_drawer_open">Ouvre le menu coulissant</string>
+    <string name="navigation_drawer_close">Ferme le menu coulissant</string>
+    <string name="title_activity_settings">Paramètres</string>
+    <string name ="open">Ouvert</string>
+    <string name ="closed">Fermé</string>
+    <string name ="place_notification">Lieu : </string>
+    <string name ="with_notification">Avec : </string>
+    <string name ="at_notification">Au : </string>
+    <string name ="lunch_notification">C\'est l\'heure de manger !</string>
+    <string name ="user_not_decided"> ne s\'est pas encore décidé</string>
+    <string name ="user_eating_at"> mange à </string>
+    <string name ="user_is_joining"> te rejoint !</string>
+    <string name="restaurant_image">image du restaurant</string>
+    <string name="restaurant_name">Nom du restaurant</string>
+    <string name="restaurant_address">Restaurant Address</string>
+    <string name="rate_2_stars">Note 2 étoiles</string>
+    <string name="rate_1_star">Note 1 étoile</string>
+    <string name="rate_3_stars">Note 3 étoiles</string>
+    <string name="call">APPEL</string>
+    <string name="call_image">Image d\'appel</string>
+    <string name="like">AIME</string>
+    <string name="star_image">Image d\'étoile</string>
+    <string name="website">SITE WEB</string>
+    <string name="website_image">image du website</string>
+    <string name="number_of_workmates_icon">icône du nombre de collègues</string>
+    <string name="restaurant_distance">Distance du restaurant</string>
+    <string name="restaurant_aperture">Horaire du restaurant</string>
+    <string name="number_of_workmates_text">Nombre de collègues</string>
+    <string name="user_profile_picture">Image de la photo de profil</string>
+    <string name="user_name">Nom de l\'utilisateur</string>
+    <string name="user_email">>Email de l\'utilisateur</string>
+    <string name="search">Rechercher</string>
+    <string name="map_view">Carte</string>
+    <string name="list_view">Liste</string>
+    <string name="workmates">Collègues</string>
+    <string name="your_lunch">TON RESTAURANT</string>
+    <string name="settings">PARAMETRES</string>
+    <string name="logout">DECONNEXION</string>
+
+
+</resources>

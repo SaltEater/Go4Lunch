@@ -12,7 +12,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_margin="16dp"
-        tools:src="@drawable/ic_group"/>
+        tools:src="@drawable/ic_group"
+        android:contentDescription="@string/user_profile_picture" />
 
 
     <TextView
@@ -22,7 +23,7 @@
         app:layout_constraintLeft_toRightOf="@+id/workmate_img"
         app:layout_constraintTop_toTopOf="@+id/workmate_img"
         app:layout_constraintBottom_toBottomOf="@+id/workmate_img"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         tools:text="Workmate text"
         android:maxLines="1"
         android:ellipsize="end"

@@ -1,7 +1,7 @@
 package com.colin.go4lunch.views;
 
 import android.content.Context;
-import android.net.Uri;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,18 +20,23 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class WorkmateAdapter extends FirestoreRecyclerAdapter<User, WorkmateAdapter.UserHolder> {
+public class WorkmateAdapter extends FirestoreRecyclerAdapter<User, UserHolder> {
     private Context context;
+    private int version;
+    public static final int WORKMATE_FRAGMENT_VERSION = 871;
+    public static final int DETAIL_ACTIVITY_VERSION = 538;
 
-    public WorkmateAdapter(@NonNull FirestoreRecyclerOptions<User> options, Context context) {
+    public WorkmateAdapter(@NonNull FirestoreRecyclerOptions<User> options, Context context, int version) {
         super(options);
         this.context = context;
+        this.version = version;
     }
+
 
     @Override
     protected void onBindViewHolder(@NonNull UserHolder holder, int position, @NonNull User model) {
-        holder.workmateText.setText(model.getName());
-        if (model.getPhoto() != null){
+        configText(holder, model);
+        if (model.getPhoto() != null) {
             Glide.with(context)
                     .load(model.getPhoto())
                     .circleCrop()
@@ -44,23 +49,44 @@ public class WorkmateAdapter extends FirestoreRecyclerAdapter<User, WorkmateAdap
         }
     }
 
+    private void configText(UserHolder holder, User model) {
+        String workmateText = model.getName() + " ";
+        if (version == WORKMATE_FRAGMENT_VERSION) {
+            if (model.getSelectedPlaceId() == null || model.getSelectedPlaceId().equals("")) {
+                workmateText += context.getString(R.string.user_not_decided);
+                holder.workmateText.setTypeface(holder.workmateText.getTypeface(), Typeface.ITALIC);
+                holder.workmateText.setTextColor(context.getResources().getColor(R.color.gray));
+            } else {
+                workmateText += context.getString(R.string.user_eating_at) + " " + model.getSelectedPlaceName();
+                holder.workmateText.setTypeface(Typeface.DEFAULT);
+                holder.workmateText.setTextColor(context.getResources().getColor(R.color.black));
+            }
+        } else {
+            workmateText += context.getString(R.string.user_is_joining);
+            holder.workmateText.setTypeface(Typeface.DEFAULT);
+            holder.workmateText.setTextColor(context.getResources().getColor(R.color.black));
+        }
+        holder.workmateText.setText(workmateText);
+    }
+
     @NonNull
     @Override
     public UserHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.workmate_item, parent, false);
         return new UserHolder(v);
     }
+}
 
-    public class UserHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.workmate_img)
-        ImageView workmateImage;
+class UserHolder extends RecyclerView.ViewHolder {
+    @BindView(R.id.workmate_img)
+    ImageView workmateImage;
 
-        @BindView(R.id.workmate_text)
-        TextView workmateText;
+    @BindView(R.id.workmate_text)
+    TextView workmateText;
 
-        public UserHolder(@NonNull View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
-        }
+    UserHolder(@NonNull View itemView) {
+        super(itemView);
+        ButterKnife.bind(this, itemView);
     }
 }
+

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tool="http://schemas.android.com/tools"
     app:cardElevation="2dp"
     app:cardPreventCornerOverlap="true"
     app:cardUseCompatPadding="true">
@@ -20,15 +20,15 @@
         <ImageView
             android:id="@+id/restaurant_img"
             android:layout_width="70dp"
-            android:layout_height="0dp"
+            android:layout_height="70dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:scaleType="centerInside"
+            android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.976"
-            android:src="@drawable/ic_lunch" />
+            android:src="@drawable/ic_lunch"
+            android:contentDescription="@string/restaurant_image" />
 
         <TextView
             android:id="@+id/restaurant_distance"
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:text="300 m"
+            tool:text="100 m"
             app:layout_constraintBottom_toTopOf="@+id/icon_workmates_in_this_restaurant"
             app:layout_constraintEnd_toStartOf="@+id/restaurant_img"
             app:layout_constraintTop_toTopOf="parent"
@@ -48,7 +48,8 @@
             android:layout_height="24dp"
             app:layout_constraintEnd_toStartOf="@+id/number_of_workmates_in_this_restaurant"
             app:layout_constraintTop_toBottomOf="@+id/restaurant_distance"
-            android:src="@drawable/ic_group" />
+            android:src="@drawable/ic_group"
+            android:contentDescription="@string/number_of_workmates_icon" />
 
         <ImageView
             android:id="@+id/rate_1_star"
@@ -59,15 +60,17 @@
             app:layout_constraintEnd_toStartOf="@+id/restaurant_img"
             app:layout_constraintTop_toBottomOf="@+id/icon_workmates_in_this_restaurant"
             app:layout_constraintVertical_bias="1.0"
-            android:src="@drawable/ic_settings" />
+            android:src="@drawable/ic_rating_star"
+            android:contentDescription="@string/rate_1_star" />
 
         <ImageView
             android:id="@+id/rate_2_stars"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/rate_1_star"/>
-            <!--android:src="@drawable/ic_gps"-->
+            app:layout_constraintEnd_toStartOf="@+id/rate_1_star"
+            android:src="@drawable/ic_rating_star"
+            android:contentDescription="@string/rate_2_stars" />
 
         <ImageView
             android:id="@+id/rate_3_stars"
@@ -75,7 +78,8 @@
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/rate_2_stars"
-            android:src="@drawable/ic_logout" />
+            android:src="@drawable/ic_rating_star"
+            android:contentDescription="@string/rate_3_stars" />
 
         <TextView
             android:id="@+id/restaurant_name"
@@ -86,7 +90,7 @@
             android:layout_marginEnd="8dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="restaurant name"
+            tool:text="@string/restaurant_name"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/restaurant_address"
             app:layout_constraintEnd_toStartOf="@+id/icon_workmates_in_this_restaurant"
@@ -101,7 +105,7 @@
             android:layout_marginEnd="8dp"
             android:ellipsize="end"
             android:maxLines="2"
-            android:text="restaurant address"
+            tool:text="@string/restaurant_address"
             android:textSize="12sp"
             app:layout_constraintBottom_toTopOf="@+id/restaurant_aperture"
             app:layout_constraintEnd_toStartOf="@+id/icon_workmates_in_this_restaurant"
@@ -115,7 +119,7 @@
             android:layout_height="14dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:text="restaurant aperture"
+            tool:text="@string/restaurant_aperture"
             android:textSize="12sp"
             android:textStyle="italic"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -130,7 +134,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:text="(0)"
+            tool:text="(0)"
             android:textAlignment="center"
             app:layout_constraintBottom_toBottomOf="@+id/icon_workmates_in_this_restaurant"
             app:layout_constraintEnd_toStartOf="@+id/restaurant_img"

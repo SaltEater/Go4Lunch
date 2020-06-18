@@ -2,92 +2,48 @@ package com.colin.go4lunch.controllers.fragments;
 
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import com.colin.go4lunch.R;
-import com.colin.go4lunch.controllers.activities.MainActivity;
 import com.colin.go4lunch.controllers.bases.BaseFragment;
-import com.colin.go4lunch.models.Restaurant;
-import com.colin.go4lunch.utils.PlaceUtils;
-import com.google.android.gms.common.api.ApiException;
+import com.colin.go4lunch.models.FormattedPlace;
+import com.colin.go4lunch.utils.MapMethods;
+import com.colin.go4lunch.utils.UserHelper;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.model.PlaceLikelihood;
-import com.google.android.libraries.places.api.net.FetchPlaceResponse;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
-
+import com.google.android.gms.tasks.Task;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import butterknife.OnClick;
-import pub.devrel.easypermissions.AppSettingsDialog;
-import pub.devrel.easypermissions.EasyPermissions;
-
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
-public class MapFragment extends BaseFragment implements OnMapReadyCallback, EasyPermissions.PermissionCallbacks {
+public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 
     private GoogleMap mGMap;
 
     private FusedLocationProviderClient fusedLocationClient;
 
-    public static MapFragment newInstance() {
-        return new MapFragment();
+    private MapMethods mapMethods;
+
+    private ArrayList<Marker> markers = new ArrayList<>();
+
+    public static MapFragment newInstance(MapMethods mapMethods) {
+        return new MapFragment(mapMethods);
+    }
+
+    private MapFragment(MapMethods mapMethods) {
+        this.mapMethods = mapMethods;
     }
 
     private final String[] perms = {ACCESS_FINE_LOCATION};
     private static final int RC_LOCATION = 1001;
-
-    private static final String TAG = "MAP_FRAGMENT";
-
-    // ----------------------
-    // PLACES
-    // ----------------------
-
-    private void findPlaces() {
-        if (ContextCompat.checkSelfPermission(getActivity(), ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            PlaceUtils.fetchFindCurrentPlaceResponseTask(Arrays.asList( Place.Field.ID, Place.Field.LAT_LNG, Place.Field.TYPES)).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    FindCurrentPlaceResponse response = task.getResult();
-                    assert response != null;
-                    ArrayList<String> placesId = new ArrayList<>();
-                    for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
-                        Place place = placeLikelihood.getPlace();
-                        assert place.getTypes() != null;
-                        if (place.getTypes().contains(Place.Type.RESTAURANT)) {
-                            addMarker(place.getLatLng());
-                            placesId.add(place.getId());
-                            /*PlaceUtils.fetchPlaceResponseTask(place.getId(), Arrays.asList(
-                                    Place.Field.ID,
-                                    Place.Field.NAME,
-                                    Place.Field.PHOTO_METADATAS,
-                                    Place.Field.LAT_LNG,
-                                    Place.Field.TYPES,
-                                    Place.Field.ADDRESS,
-                                    Place.Field.OPENING_HOURS)).addOnSuccessListener(new OnSuccessListener<FetchPlaceResponse>() {
-                                @Override
-                                public void onSuccess(FetchPlaceResponse fetchPlaceResponse) {
-                                    ((MainActivity) getActivity()).updateListViewFragment(new Restaurant(fetchPlaceResponse.getPlace()));
-                                }
-                            });*/
-                        }
-                    }
-                    ((MainActivity) getActivity()).updateListViewFragment(placesId);
-                }
-            });
-        }
-    }
-
-
 
     // ----------------------
     // PERMISSIONS
@@ -95,18 +51,9 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Eas
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
-    }
-
-    @Override
-    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
-        configureFragment();
-    }
-
-    @Override
-    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
-        new AppSettingsDialog.Builder(this).build().show();
+        if (requestCode == RC_LOCATION)
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                configureMapApi();
     }
 
     // ----------------------
@@ -115,10 +62,10 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Eas
 
     @Override
     protected void configureFragment() {
-        if (EasyPermissions.hasPermissions(getContext(), perms)) {
+        if (ContextCompat.checkSelfPermission(requireContext(), ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             configureMapApi();
         } else {
-            EasyPermissions.requestPermissions(this, "Nous avons besoin d'avoir accès à la localisation", RC_LOCATION, perms);
+            requestPermissions(perms, RC_LOCATION);
         }
     }
 
@@ -133,49 +80,78 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Eas
     // ----------------------
 
     @OnClick(R.id.fragment_map_floating_action_btn)
-    private void onClickFloatingActionBtn() {
-        fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        if (location != null) {
-                            mGMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
-                            findPlaces();
-                        }
-                    }
-                });
+    void onClickFloatingActionBtn() {
+        if (ContextCompat.checkSelfPermission(requireContext(), ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationClient.getLastLocation().addOnSuccessListener(requireActivity(), location -> {
+                if (location != null) {
+                    mGMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 17));
+                    mapMethods.getNearbyPlaces(location);
+                }
+            });
+        } else {
+            requestPermissions(perms, RC_LOCATION);
+        }
+    }
+
+    public Task<Location> getLastLocation() {
+        if (fusedLocationClient != null && ContextCompat.checkSelfPermission(requireContext(), ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+            return fusedLocationClient.getLastLocation();
+        return null;
     }
 
     private void configureMapApi() {
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragment_map_map_view);
-        mapFragment.getMapAsync(this);
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        if (mapFragment != null)
+            mapFragment.getMapAsync(this);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
     }
-
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mGMap = googleMap;
         mGMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mGMap.setIndoorEnabled(true);
-        mGMap.setMyLocationEnabled(true);
         mGMap.getUiSettings().setMyLocationButtonEnabled(false);
-        fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
+        if (ContextCompat.checkSelfPermission(requireContext(), ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mGMap.setMyLocationEnabled(true);
+            fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(requireActivity(), location -> {
                         if (location != null) {
-                            mGMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
+                            moveCamera(location);
+                            mapMethods.getNearbyPlaces(location);
                         }
-                    }
-                });
+                    });
+            mGMap.setOnMarkerClickListener(marker -> {
+                mapMethods.onMarkerClick((String) marker.getTag());
+                return true;
+            });
+        }
     }
 
-    private void addMarker(LatLng position) {
-        System.out.println("OUTPUT : Marker added");
-        mGMap.addMarker(new MarkerOptions().position(position));
-                //.title(title));
-        //.setIcon(BitmapDescriptorFactory.fromResource(icon));
+    public void markPlaces(ArrayList<FormattedPlace> places) {
+        for (int i = 0; i < places.size(); i++) {
+            FormattedPlace place = places.get(i);
+            UserHelper.getUsersInterestedByPlace(places.get(i).getId()).addOnSuccessListener(queryDocumentSnapshots -> {
+                if (queryDocumentSnapshots.size() > 0) {
+                    markers.add(mGMap.addMarker(new MarkerOptions().position(new LatLng(place.getLocationLatitude(), place.getLocationLongitude()))
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))));
+                } else {
+                    markers.add(mGMap.addMarker(new MarkerOptions().position(new LatLng(place.getLocationLatitude(), place.getLocationLongitude()))
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))));
+                }
+                markers.get(markers.size() - 1).setTag(place.getId());
+            });
+        }
+    }
+
+    public void removeMarkers() {
+        for (int i = 0; i < markers.size(); i++)
+            markers.get(i).remove();
+        markers.clear();
+    }
+
+    public void moveCamera(Location location) {
+        mGMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 17));
     }
 
 

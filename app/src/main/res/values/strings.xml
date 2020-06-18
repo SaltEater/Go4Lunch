@@ -1,23 +1,44 @@
 <resources>
-    <string name="app_name">Go4Lunch</string>
+    <string name="app_name" translatable="false">Go4Lunch</string>
+    <string name="notification_parameter" translatable="false">notification_preferences</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="title_activity_settings">Settings</string>
-
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
-
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="open">Open</string>
+    <string name="closed">Closed</string>
+    <string name="place_notification">Place : </string>
+    <string name="with_notification">With : </string>
+    <string name="at_notification">At : </string>
+    <string name="lunch_notification">It\'s lunch time !</string>
+    <string name="user_not_decided"> has not decided yet</string>
+    <string name="user_eating_at"> is eating at </string>
+    <string name="user_is_joining"> is joining !</string>
+    <string name="restaurant_image">restaurant image</string>
+    <string name="restaurant_address">Restaurant Address</string>
+    <string name="rate_2_stars">Rate 2 stars</string>
+    <string name="rate_1_star">Rate 1 star</string>
+    <string name="rate_3_stars">Rate 3 stars</string>
+    <string name="call">CALL</string>
+    <string name="call_image">Call image</string>
+    <string name="like">LIKE</string>
+    <string name="star_image">star image</string>
+    <string name="website">WEBSITE</string>
+    <string name="website_image">website image</string>
+    <string name="number_of_workmates_icon">number of workmates icon</string>
+    <string name="restaurant_distance">restaurant distance</string>
+    <string name="restaurant_aperture">restaurant aperture</string>
+    <string name="number_of_workmates_text">number of workmates text</string>
+    <string name="user_profile_picture">User profile picture</string>
+    <string name="user_name">User\'s name</string>
+    <string name="user_email">User\'s email</string>
+    <string name="search">Search</string>
+    <string name="map_view">Map View</string>
+    <string name="list_view">List View</string>
+    <string name="workmates">Workmates</string>
+    <string name="your_lunch">YOUR LUNCH</string>
+    <string name="settings">SETTINGS</string>
+    <string name="logout">LOGOUT</string>
+    <string name="restaurant_name">Restaurant name</string>
 
 </resources>

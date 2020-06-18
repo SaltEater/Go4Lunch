@@ -16,15 +16,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected abstract void configureActivity();
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState)
-    {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getActivityLayout());
         ButterKnife.bind(this);
         this.configureActivity();
     }
 
-    @Nullable
     public FirebaseUser getCurrentUser() { return FirebaseAuth.getInstance().getCurrentUser(); }
 
     public Boolean isCurrentUserLogged() { return (this.getCurrentUser() != null); }

@@ -24,10 +24,23 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField("String", "google_maps_api", google_maps_api)
             resValue "string", "google_maps_api", google_maps_api
+
+            buildConfigField("String", "facebook_application_id", facebook_application_id)
+            resValue "string", "facebook_application_id", facebook_application_id
+
+            buildConfigField("String", "fb_login_protocol_scheme", fb_login_protocol_scheme)
+            resValue "string", "fb_login_protocol_scheme", fb_login_protocol_scheme
         }
         debug {
             buildConfigField("String", "google_maps_api", google_maps_api)
             resValue "string", "google_maps_api", google_maps_api
+
+            buildConfigField("String", "facebook_application_id", facebook_application_id)
+            resValue "string", "facebook_application_id", facebook_application_id
+
+            buildConfigField("String", "fb_login_protocol_scheme", fb_login_protocol_scheme)
+            resValue "string", "fb_login_protocol_scheme", fb_login_protocol_scheme
+
         }
 
     }
@@ -36,6 +49,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    //configurations { all*.exclude group: 'com.google.guava', module: 'listenablefuture' }
 
 }
 
@@ -67,10 +81,6 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 
-    // FIREBASE - AUTHENTICATION
-    //implementation 'com.google.firebase:firebase-core:17.4.0'
-    //implementation 'com.facebook.android:facebook-android-sdk:4.42.0'
-
     // FirebaseUI for Firebase Realtime Database
     implementation 'com.firebaseui:firebase-ui-database:6.2.1'
 
@@ -79,6 +89,8 @@ dependencies {
 
     // FirebaseUI for Firebase Auth
     implementation 'com.firebaseui:firebase-ui-auth:6.2.1'
+    implementation 'com.google.firebase:firebase-auth:19.3.1'
+    implementation 'com.google.android.gms:play-services-auth:18.0.0'
 
     // FirebaseUI for Cloud Storage
     implementation 'com.firebaseui:firebase-ui-storage:6.2.1'
@@ -90,7 +102,26 @@ dependencies {
     implementation 'pub.devrel:easypermissions:3.0.0'
 
     // PLACES
-    implementation 'com.google.android.libraries.places:places:2.2.0'
+    implementation 'com.google.android.libraries.places:places:2.3.0'
+
+    // RETROFIT
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+    implementation "com.github.akarnokd:rxjava3-retrofit-adapter:3.0.0"
+
+    //RXJAVA
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+    implementation 'io.reactivex.rxjava3:rxjava:3.0.0'
+
+    implementation "androidx.work:work-gcm:2.3.4"
+    implementation 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'
+
+    // FACEBOOK
+    implementation 'com.facebook.android:facebook-android-sdk:4.34.0'
+
+    // TWITTER
+    implementation 'com.twitter.sdk.android:twitter-core:3.3.0'
+
 
 
 }

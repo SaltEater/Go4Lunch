@@ -1,33 +1,41 @@
 package com.colin.go4lunch.controllers.activities;
 
-import android.os.Bundle;
-
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceFragmentCompat;
-
+import androidx.appcompat.widget.Toolbar;
 import com.colin.go4lunch.R;
+import com.colin.go4lunch.controllers.bases.BaseActivity;
+import com.colin.go4lunch.controllers.fragments.SettingsFragment;
+import butterknife.BindView;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends BaseActivity {
+    @BindView(R.id.activity_setting_toolbar_include)
+    Toolbar mToolbar;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.settings_activity);
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.settings, new SettingsFragment())
-                .commit();
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
-    public static class SettingsFragment extends PreferenceFragmentCompat {
-        @Override
-        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-            setPreferencesFromResource(R.xml.root_preferences, rootKey);
-        }
+    @Override
+    protected int getActivityLayout() {
+        return R.layout.settings_activity;
     }
+
+    @Override
+    protected void configureActivity() {
+        this.configureToolbar();
+        updateActivity();
+    }
+
+    protected void updateActivity() {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.activity_settings_fragment_container, SettingsFragment.newInstance())
+                .commit();
+    }
+
+    private void configureToolbar() {
+        mToolbar.setTitle(getString(R.string.title_activity_settings));
+        setSupportActionBar(mToolbar);
+    }
+
 }
