@@ -17,7 +17,7 @@ import androidx.work.Data;
 import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
-import com.bumptech.glide.Glide;
+
 import com.colin.go4lunch.BuildConfig;
 import com.colin.go4lunch.R;
 import com.colin.go4lunch.controllers.bases.BaseActivity;
@@ -27,6 +27,7 @@ import com.colin.go4lunch.models.User;
 import com.colin.go4lunch.models.googleplacedetails.MainPlaceDetails;
 import com.colin.go4lunch.models.googleplacedetails.Result;
 import com.colin.go4lunch.utils.GoogleApiStream;
+import com.colin.go4lunch.utils.NetworkUtils;
 import com.colin.go4lunch.utils.NotifyWorker;
 import com.colin.go4lunch.utils.UserHelper;
 import com.colin.go4lunch.views.WorkmateAdapter;
@@ -42,13 +43,13 @@ import static android.Manifest.permission.CALL_PHONE;
 
 public class RestaurantDetailActivity extends BaseActivity {
     @BindView(R.id.activity_details_restaurant_img)
-    ImageView RestaurantImage;
+    ImageView restaurantImage;
 
     @BindView(R.id.activity_details_restaurant_name)
-    TextView RestaurantName;
+    TextView restaurantName;
 
     @BindView(R.id.activity_details_restaurant_address)
-    TextView RestaurantAddress;
+    TextView restaurantAddress;
 
     @BindView(R.id.activity_details_restaurant_rate_1_star)
     ImageView restaurantRatingStar1;
@@ -230,40 +231,36 @@ public class RestaurantDetailActivity extends BaseActivity {
     }
 
     private void configText() {
-        RestaurantName.setText(place.getName());
-        RestaurantAddress.setText(place.getAddress());
+        restaurantName.setText(place.getName());
+        restaurantAddress.setText(place.getAddress());
     }
 
     private void configPhoto() {
-        Glide.with(this)
-                .load("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="
-                        + place.getPhotoReference() + "&key=" + BuildConfig.google_maps_api)
-                .circleCrop()
-                .into(RestaurantImage);
+        NetworkUtils.configGooglePhoto(this, place.getPhotoReference(), restaurantImage);
+    }
+
+    public void configStarsVisibility(int state1, int state2, int state3) {
+        restaurantRatingStar1.setVisibility(state1);
+        restaurantRatingStar2.setVisibility(state2);
+        restaurantRatingStar3.setVisibility(state3);
     }
 
     private void configStars() {
         int rating = (int) place.getRating();
+        final int visible = View.VISIBLE;
+        final int invisible = View.INVISIBLE;
         switch (rating) {
             case 1:
-                restaurantRatingStar1.setVisibility(View.VISIBLE);
-                restaurantRatingStar2.setVisibility(View.INVISIBLE);
-                restaurantRatingStar3.setVisibility(View.INVISIBLE);
+                configStarsVisibility(visible, invisible, invisible);
                 break;
             case 2:
-                restaurantRatingStar1.setVisibility(View.VISIBLE);
-                restaurantRatingStar2.setVisibility(View.VISIBLE);
-                restaurantRatingStar3.setVisibility(View.INVISIBLE);
+                configStarsVisibility(visible, visible, invisible);
                 break;
             case 3:
-                restaurantRatingStar1.setVisibility(View.VISIBLE);
-                restaurantRatingStar2.setVisibility(View.VISIBLE);
-                restaurantRatingStar3.setVisibility(View.VISIBLE);
+                configStarsVisibility(visible, visible, visible);
                 break;
             default:
-                restaurantRatingStar1.setVisibility(View.INVISIBLE);
-                restaurantRatingStar2.setVisibility(View.INVISIBLE);
-                restaurantRatingStar3.setVisibility(View.INVISIBLE);
+                configStarsVisibility(invisible, invisible, invisible);
         }
     }
 

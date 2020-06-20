@@ -111,7 +111,7 @@ public class NotifyWorker extends Worker {
                     manager.createNotificationChannel(channel);
                 }
                 manager.notify(NOTIFICATION_TAG, NOTIFICATION_ID, builder.build());
-                updateUserPlace();
+                //updateUserPlace();
             }
         });
     }

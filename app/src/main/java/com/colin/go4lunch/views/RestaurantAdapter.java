@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.colin.go4lunch.BuildConfig;
 import com.colin.go4lunch.R;
 import com.colin.go4lunch.models.FormattedPlace;
+import com.colin.go4lunch.utils.NetworkUtils;
 import com.colin.go4lunch.utils.UserHelper;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,9 +51,9 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantHolder> im
     @Override
     public void onBindViewHolder(@NonNull RestaurantHolder holder, int position) {
         FormattedPlace place = placesDisplayed.get(position);
-        Glide.with(context)
-                .load("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + place.getPhotoReference()+"&key=" + BuildConfig.google_maps_api)
-                .into(holder.restaurantImage);
+
+        NetworkUtils.configGooglePhoto(context, place.getPhotoReference(), holder.restaurantImage);
+
         UserHelper.getUsersInterestedByPlace(place.getId()).addOnSuccessListener(queryDocumentSnapshots -> {
             String nbWorkmatesValue = "(" + queryDocumentSnapshots.size() + ")";
             holder.nbWorkmates.setText(nbWorkmatesValue);
@@ -77,28 +78,29 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantHolder> im
         configStars(holder, place);
     }
 
+    public void configStarsVisibility(RestaurantHolder holder, int state1, int state2, int state3) {
+        holder.ratingStar1.setVisibility(state1);
+        holder.ratingStar2.setVisibility(state2);
+        holder.ratingStar3.setVisibility(state3);
+    }
+
+
     private void configStars(RestaurantHolder holder, FormattedPlace place) {
         int rating = (int) place.getRating();
+        final int visible = View.VISIBLE;
+        final int invisible = View.INVISIBLE;
         switch (rating) {
             case 1 :
-                holder.ratingStar1.setVisibility(View.VISIBLE);
-                holder.ratingStar2.setVisibility(View.INVISIBLE);
-                holder.ratingStar3.setVisibility(View.INVISIBLE);
+                configStarsVisibility(holder, visible, invisible, invisible);
                 break;
             case 2 :
-                holder.ratingStar1.setVisibility(View.VISIBLE);
-                holder.ratingStar2.setVisibility(View.VISIBLE);
-                holder.ratingStar3.setVisibility(View.INVISIBLE);
+                configStarsVisibility(holder, visible, visible, invisible);
                 break;
             case 3 :
-                holder.ratingStar1.setVisibility(View.VISIBLE);
-                holder.ratingStar2.setVisibility(View.VISIBLE);
-                holder.ratingStar3.setVisibility(View.VISIBLE);
+                configStarsVisibility(holder, visible, visible, visible);
                 break;
             default:
-                holder.ratingStar1.setVisibility(View.INVISIBLE);
-                holder.ratingStar2.setVisibility(View.INVISIBLE);
-                holder.ratingStar3.setVisibility(View.INVISIBLE);
+                configStarsVisibility(holder, invisible, invisible, invisible);
         }
     }
 
